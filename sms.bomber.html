@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Phone + Amount — Test UI</title>
+  <style>
+    :root{
+      --bg:#f7fbfb;
+      --card:#ffffff;
+      --teal:#0ea5a4; /* teal accent */
+      --muted:#6b7280;
+      --danger:#dc2626;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+      background:linear-gradient(180deg, var(--bg), #ffffff);
+      color:#0f172a;
+      padding:18px;
+      -webkit-font-smoothing:antialiased;
+    }
+    .container{
+      max-width:760px;
+      margin:0 auto;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:16px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:10px;
+      background:linear-gradient(135deg,var(--teal),#06b6d4);
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;
+      box-shadow:0 6px 18px rgba(14,165,164,0.12);
+      font-size:18px;
+    }
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      padding:16px;
+      box-shadow:0 6px 18px rgba(2,6,23,0.06);
+      margin-bottom:14px;
+    }
+    label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+    input[type="text"], input[type="number"]{
+      width:100%;
+      padding:12px 14px;
+      border-radius:8px;
+      border:1px solid #e6eef0;
+      font-size:16px;
+      outline:none;
+      background: #fbfeff;
+    }
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+    .muted{font-size:13px;color:var(--muted);margin-top:8px}
+    button{
+      display:inline-flex;gap:8px;align-items:center;
+      background:var(--teal); color:white; border:0; padding:10px 14px; border-radius:10px;
+      font-weight:600; cursor:pointer; font-size:15px;
+      box-shadow:0 8px 20px rgba(14,165,164,0.12);
+    }
+    button:disabled{opacity:0.55; cursor:not-allowed; box-shadow:none}
+    pre{
+      overflow:auto; background:#0b1220; color:#d7fffb; padding:12px; border-radius:8px; font-size:13px;
+    }
+    .foot{font-size:13px;color:var(--muted); margin-top:10px}
+    .error{color:var(--danger); font-size:13px; margin-top:8px}
+    @media (max-width:520px){
+      .row{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">R</div>
+      <div>
+        <div style="font-weight:700;font-size:16px">Phone + Amount Tester</div>
+        <div style="font-size:13px;color:var(--muted)">একটি নম্বর দিয়ে GET কল করুন — নিরাপদ ব্যবহার করুন</div>
+      </div>
+    </header>
+
+    <div class="card" id="formCard">
+      <form id="sendForm" autocomplete="off">
+        <div class="row">
+          <div class="col">
+            <label for="phone">Phone (বাংলাদেশি ফরম্যাট, উদাহরণ: 01871594276)</label>
+            <input id="phone" name="phone" type="text" inputmode="numeric" placeholder="01XXXXXXXXX" required>
+          </div>
+
+          <div style="width:140px">
+            <label for="amount">Amount (৳)</label>
+            <input id="amount" name="amount" type="number" min="0" step="0.01" placeholder="0.00" required>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:10px; align-items:center;">
+          <button id="sendBtn" type="submit">Send Verification</button>
+          <div id="cooldownMsg" class="muted" style="font-size:13px;"></div>
+        </div>
+
+        <div id="err" class="error" role="status" aria-live="polite"></div>
+        <div class="muted" style="margin-top:10px">
+          <strong>নোট:</strong> Amount ফিল্ডটি শুধুই UI/লজিকের জন্য — ব্যাকএন্ডে পাঠানো হচ্ছে না। আপনি যদি API কল করতে চান, শুধু ফোন নম্বরটি URL প্যারাম হিসেবে পাঠানো হবে।
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:8px">Response / Log</div>
+      <pre id="log">No requests yet.</pre>
+      <div class="foot">ইউজ করার আগে নিশ্চিত করুন আপনি যেই ফোন নম্বরটি ব্যবহার করছেন তা আপনার বা অনুমোদিত। অনুমতি ছাড়া কাউকে বিরক্ত করা/ বারবার ভেরিফিকেশন পাঠানো আইনবিরুদ্ধ।</div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const form = document.getElementById('sendForm');
+      const phoneInput = document.getElementById('phone');
+      const amountInput = document.getElementById('amount');
+      const sendBtn = document.getElementById('sendBtn');
+      const log = document.getElementById('log');
+      const err = document.getElementById('err');
+      const cooldownMsg = document.getElementById('cooldownMsg');
+
+      let cooldown = false;
+      const COOLDOWN_SECONDS = 30; // client-side cooldown (prevents accidental repeat)
+
+      function appendLog(text){
+        const time = new Date().toLocaleString();
+        log.textContent = `[${time}] ` + text + "\\n" + log.textContent;
+      }
+
+      // Bangladesh phone validator: starts with 01 and total 11 digits
+      function validBDPhone(v){
+        if(!v) return false;
+        v = v.trim();
+        // allow optional +88 prefix
+        if(v.startsWith('+88')) v = v.slice(3);
+        if(v.startsWith('88') && v.length>11) v = v.slice(2);
+        // now expect 11 chars starting with 01
+        return /^01\\d{9}$/.test(v);
+      }
+
+      async function sendVerification(phone){
+        // build URL
+        const base = "https://bikroy.com/data/phone_number_login/verifications/phone_login";
+        const url = base + "?phone=" + encodeURIComponent(phone);
+
+        appendLog("Sending GET -> " + url);
+
+        // fetch with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(()=> controller.abort(), 10000); // 10s
+
+        try {
+          const resp = await fetch(url, { method: "GET", signal: controller.signal, credentials: "omit" });
+          clearTimeout(timeoutId);
+
+          const ct = resp.headers.get("content-type") || "";
+          let body;
+          if (ct.includes("application/json")) {
+            body = await resp.json();
+            appendLog("Status: " + resp.status + " | JSON response: " + JSON.stringify(body));
+          } else {
+            body = await resp.text();
+            // truncate long HTML
+            const short = body.length > 1200 ? body.slice(0,1200) + "\\n...[truncated]" : body;
+            appendLog("Status: " + resp.status + " | Text response: " + short);
+          }
+          // show last result in the log area
+          err.textContent = "";
+        } catch (e) {
+          if (e.name === "AbortError") {
+            appendLog("Error: Request timed out (10s).");
+            err.textContent = "Request timed out. Try again later.";
+          } else {
+            appendLog("Network/Error: " + (e.message || e));
+            err.textContent = "Network or CORS error: " + (e.message || e);
+          }
+        }
+      }
+
+      function startCooldown(seconds){
+        cooldown = true;
+        sendBtn.disabled = true;
+        let s = seconds;
+        cooldownMsg.textContent = `বাতিলঃ ${s}s`;
+        const iv = setInterval(()=>{
+          s--;
+          if(s<=0){
+            clearInterval(iv);
+            cooldown = false;
+            sendBtn.disabled = false;
+            cooldownMsg.textContent = "";
+          } else {
+            cooldownMsg.textContent = `বাতিলঃ ${s}s`;
+          }
+        }, 1000);
+      }
+
+      form.addEventListener('submit', async (ev)=>{
+        ev.preventDefault();
+        err.textContent = "";
+
+        const phoneRaw = phoneInput.value.trim();
+        const amountRaw = amountInput.value.trim();
+
+        if(!validBDPhone(phoneRaw)){
+          err.textContent = "ভুল ফোন ফরম্যাট — সঠিকভাবে 01XXXXXXXXX টাইপ করুন (বাংলাদেশি)।";
+          return;
+        }
+        if(amountRaw === "" || isNaN(Number(amountRaw)) || Number(amountRaw) < 0){
+          err.textContent = "ভুল এমাউন্ট — একটি ধনাত্মক সংখ্যা দিন।";
+          return;
+        }
+
+        if(cooldown){
+          err.textContent = "অনুগ্রহ করে একটু পর আবার চেষ্টা করুন (ক্লায়েন্ট-কোולדাউন)।";
+          return;
+        }
+
+        // Normalize phone: remove +88 or leading 88 if present
+        let phone = phoneRaw.replace(/^\\+?88/, "");
+
+        // Safety: confirmation dialog (quick)
+        const confirmed = confirm(`আপনি ${phone} এ ভেরিফিকেশন পাঠাতে চান? (Amount: ৳${Number(amountRaw).toFixed(2)})`);
+        if(!confirmed) return;
+
+        // Start cooldown before sending to avoid double-click
+        startCooldown(COOLDOWN_SECONDS);
+
+        // Note: amount is NOT sent to API (only for UI). If you need to include amount in a legit backend,
+        // you must implement a server that stores/forwards it with proper auth.
+        appendLog("Amount (UI-only): ৳" + Number(amountRaw).toFixed(2));
+
+        await sendVerification(phone);
+      });
+
+      // Example: prefill for testing (optional)
+      // phoneInput.value = "01871594276";
+      // amountInput.value = "100";
+
+    })();
+  </script>
+</body>
+</html>
