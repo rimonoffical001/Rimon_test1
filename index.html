@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABIR HOSSEN RIMON | Glamour Profile</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* --- 1. Global & Variables (Glamorous Palette) --- */
+        :root {
+            --bg-color: #0a0a0a; /* Deep Dark Background */
+            --primary-color: #ffd700; /* Gold */
+            --secondary-color: #e6e6e6; /* Light Gray/Silver */
+            --accent-color: #ff69b4; /* Hot Pink for subtle glow */
+            --card-bg: rgba(25, 25, 25, 0.9);
+            --text-dark: #f0f0f0;
+            --text-light: #cccccc;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+            margin: 0;
+            padding: 50px 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* [Wave Animation Styles] */
+        .wavy-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; background: linear-gradient(135deg, var(--bg-color) 0%, #1e1e2e 100%); }
+        .wavy-background { --primary-color-rgb: 255, 215, 0; --secondary-color-rgb: 230, 230, 230; }
+        .wave { position: absolute; bottom: 0; width: 200%; height: 100%; animation: waveMove 15s linear infinite; }
+        .wave:nth-child(1) { background: rgba(var(--primary-color-rgb), 0.08); animation-delay: 0s; }
+        .wave:nth-child(2) { background: rgba(var(--secondary-color-rgb), 0.05); animation-delay: -7.5s; }
+        .wave::before { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-size: cover; animation: waveForm 15s linear infinite; }
+        .wave:nth-child(1)::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-250.9 35.3-359.3 18.6-97.7-14.7-174.6-0.6-264.4 5.9-49.7 3.6-116.6 4.6-176.6 2.3V0h800z' fill='%23ffd700' opacity='0.1'/%3E%3C/svg%3E"); animation-delay: 0s; }
+        .wave:nth-child(2)::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-250.9 35.3-359.3 18.6-97.7-14.7-174.6-0.6-264.4 5.9-49.7 3.6-116.6 4.6-176.6 2.3V0h800z' fill='%23e6e6e6' opacity='0.08'/%3E%3C/svg%3E"); animation-delay: -7.5s; }
+        @keyframes waveMove { 0% { transform: translateX(0) rotate(0deg); } 100% { transform: translateX(-50%) rotate(360deg); } }
+        @keyframes waveForm { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+
+        /* [Main Container & Header Animations] */
+        .container { width: 90%; max-width: 500px; margin: 0 auto; background: var(--card-bg); border: 2px solid var(--primary-color); box-shadow: 0 0 30px rgba(255, 215, 0, 0.4); border-radius: 15px; padding: 30px; z-index: 10; position: relative; text-align: center; opacity: 0; transform: translateY(40px) scale(0.9); animation: cardReveal 1s forwards ease-out; animation-delay: 0.8s; }
+        @keyframes cardReveal { to { opacity: 1; transform: translateY(0) scale(1); } }
+        .greeting, h1, .tagline, .profile-img { opacity: 0; }
+        .greeting { font-family: 'Playfair Display', serif; color: var(--secondary-color); font-size: 1.4em; margin-bottom: 15px; animation: slideDownFadeIn 0.8s forwards; animation-delay: 1.2s; }
+        .greeting.arabic { font-family: 'Amiri', serif; font-size: 1.8em; margin-bottom: 5px; color: var(--primary-color); } /* ARABIC FONT STYLED */
+        h1 { font-family: 'Playfair Display', serif; font-size: 3.2em; color: var(--primary-color); text-shadow: 0 0 10px rgba(255, 215, 0, 0.7); margin: 10px auto; letter-spacing: 2px; animation: zoomFadeIn 0.8s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); animation-delay: 1.5s; }
+        .tagline { color: var(--text-light); font-size: 1.1em; margin-bottom: 25px; animation: fadeIn 0.8s forwards; animation-delay: 2.0s; }
+        .profile-img { width: 140px; height: 140px; border-radius: 50%; border: 5px solid var(--primary-color); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); margin: 20px auto 30px auto; display: block; animation: imgSpinIn 0.8s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94); animation-delay: 1.8s; }
+        @keyframes slideDownFadeIn { to { opacity: 1; transform: translateY(0); } }
+        @keyframes zoomFadeIn { to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes imgSpinIn { to { opacity: 1; transform: scale(1) rotate(0deg); } }
+        
+        /* [Card Base Styles and Delays] */
+        .animated-card { background: rgba(40, 40, 40, 0.8); border-left: 4px solid var(--secondary-color); border-radius: 8px; padding: 20px; margin-top: 25px; opacity: 0; transform: translateY(30px); animation: slideUpFadeIn 0.8s forwards ease-out; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; text-align: left; }
+        @keyframes slideUpFadeIn { to { opacity: 1; transform: translateY(0); } }
+        .animated-card:nth-of-type(1) { animation-delay: 2.5s; } /* Bio */
+        .animated-card:nth-of-type(2) { animation-delay: 2.8s; } /* Hobbies (Updated Delay) */
+        .animated-card:nth-of-type(3) { animation-delay: 3.1s; } /* Achievement */
+        .animated-card:nth-of-type(4) { animation-delay: 3.4s; } /* Gallery */
+        .animated-card:nth-of-type(5) { animation-delay: 3.7s; } /* Social */
+        .animated-card:nth-of-type(6) { animation-delay: 4.0s; } /* Quote */
+        .animated-card h3 { font-family: 'Playfair Display', serif; font-size: 1.5em; color: var(--primary-color); text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); margin-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 8px; }
+        
+        /* [Content Styling] */
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .photo-grid img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; border: 2px solid var(--primary-color); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+        .data-line { display: flex; align-items: center; margin-bottom: 8px; color: var(--text-light); }
+        .data-line i { color: var(--primary-color); margin-right: 12px; font-size: 1.1em; }
+        .data-label { color: var(--secondary-color); margin-right: 10px; font-weight: 600; min-width: 90px; }
+        .hobby-list { list-style: none; padding: 0; margin: 0; color: var(--text-light); text-align: left; }
+        .hobby-list li { margin-bottom: 8px; }
+        .hobby-list i { color: var(--primary-color); margin-right: 10px; font-size: 1.1em; }
+        .quote { color: var(--text-light); border-left: 3px solid var(--primary-color); padding-left: 15px; font-style: italic; margin: 15px 0 0 0; font-size: 1.05em; }
+
+        /* --- 5. UPDATED Social Links Styling --- */
+        .social-link-box {
+            display: flex; align-items: center; justify-content: center; padding: 12px; margin: 12px 0; border-radius: 6px;
+            text-decoration: none; font-weight: 700; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
+            color: white; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .social-link-box:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.1); }
+        .facebook { background: #1877F2; border: 2px solid #1877F2; }
+        .youtube { background: #FF0000; border: 2px solid #FF0000; }
+        .tiktok { background: #000000; border: 2px solid #ff33cc; color: var(--text-dark); }
+        .social-link-box i { margin-right: 10px; font-size: 1.3em; }
+
+        /* [Footer] */
+        .footer { text-align: center; margin-top: 35px; color: var(--secondary-color); text-shadow: 0 0 8px rgba(230, 230, 230, 0.4); opacity: 0; animation: fadeIn 0.8s forwards; animation-delay: 4.3s; }
+    </style>
+</head>
+<body>
+    
+    <div class="wavy-background">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+     <div class="container">
+        <p class="greeting arabic" style="direction: rtl;">ٱلسَّلَامُ عَلَيْكُمْ</p>
+        
+        <p class="greeting">** WELCOME TO MY PROFILE **</p>
+        
+        <img src="profile-rimon.jpg" alt="Profile Picture" class="profile-img">
+        
+        <p class="img-caption">
+            — 👑 **ABIR HOSSEN RIMON** | Living the Dream ✨ —
+        </p>
+        
+        <h1>ABIR HOSSEN RIMON</h1>
+        <p class="tagline">VISIONARY | EXPLORER | DIGITAL ARCHITECT</p>
+
+        <div class="animated-card">
+            <h3><i class="fas fa-id-card-alt"></i> PERSONAL DETAILS</h3>
+            <div class="data-line">
+                <i class="fas fa-map-marker-alt"></i> <span class="data-label">CITY:</span> 
+                <span>Lakshmipur</span>
+            </div>
+            <div class="data-line">
+                <i class="fas fa-briefcase"></i> <span class="data-label">JOB TITLE:</span> 
+                <span>Student</span>
+            </div>
+        </div>
+
+        <div class="animated-card">
+            <h3><i class="fas fa-heart"></i> HOBBIES & INTERESTS</h3>
+            <ul class="hobby-list">
+                <li><i class="fas fa-user-shield"></i> Bangladesh Army (Discipline & Strength)</li>
+                <li><i class="fas fa-globe-americas"></i> Travelling (Exploring Different Places)</li>
+                <li><i class="fas fa-code"></i> Information Technology (Learning & Innovation)</li>
+            </ul>
+        </div>
+
+        
+        <div class="animated-card">
+            <h3><i class="fas fa-trophy"></i> TRAINING ACHIEVEMENT</h3>
+            <p style="color: var(--secondary-color); margin-bottom: 10px; font-weight: 600;">
+                <i class="fas fa-crosshairs"></i> Ansar & VDP Training (Lakshmipur District)
+            </p>
+            <p style="font-size: 0.95em; color: var(--text-light); border-left: 3px solid var(--accent-color); padding-left: 10px; margin: 0;">
+                Successfully completed the rigorous 28-day training program with the Ansar & Village Defence Party (VDP) from Lakshmipur District. This intensive course included professional weapon training and disciplined instruction, marking a significant dedication to public safety and defence.
+            </p>
+        </div>
+
+        <div class="animated-card" id="gallery-section">
+            <h3><i class="fas fa-images"></i> TRAINING GALLERY</h3>
+            <div class="photo-grid">
+                <img src="training-01.jpg" alt="Training Photo 1">
+                <img src="training-02.jpg" alt="Training Photo 2">
+                <img src="training-03.jpg" alt="Training Photo 3">
+                <img src="training-04.jpg" alt="Training Photo 4">
+                <img src="training-05.jpg" alt="Training Photo 5">
+                <img src="training-06.jpg" alt="Training Photo 6">
+            </div>
+        </div>
+        
+        <div class="animated-card">
+            <h3><i class="fas fa-share-alt"></i> CONNECT CHANNELS</h3>
+            
+            <a href="https://www.facebook.com/share/1ZtmuxqGop/" target="_blank" class="social-link-box facebook">
+                <i class="fab fa-facebook-f"></i> FACEBOOK
+            </a>
+            
+            <a href="https://youtube.com/@ur_rimon?si=_rvUvm4a6yfNn4-O" target="_blank" class="social-link-box youtube">
+                <i class="fab fa-youtube"></i> YOUTUBE
+            </a>
+            
+            <a href="https://www.tiktok.com/@rimon_official001?_t=ZS-90IZChBehqq&_r=1" target="_blank" class="social-link-box tiktok">
+                <i class="fab fa-tiktok"></i> TIKTOK
+            </a>
+        </div>
+
+        <div class="animated-card">
+            <h3><i class="fas fa-quote-left"></i> GUIDING PRINCIPLE</h3>
+            <p class="quote">
+                "Human beings change over time."
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>** © ABIR HOSSEN RIMON 2025 | ALL RIGHTS RESERVED **</p>
+        </div>
+    </div>
+</body>
+</html>
